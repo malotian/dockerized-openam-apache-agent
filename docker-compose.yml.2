@@ -18,12 +18,15 @@ services:
         domainname: example.com
 
     agent:
+        container_name: agent
+        build:
+            context: agent
+        shm_size: '1gb'
+        container_name: agent
         image: malotian/agent:1.0
         ports:
         - "80:80"
         restart: always
-        shm_size: '1gb'
-        container_name: agent
         networks:
             - example.com
         hostname: agent
