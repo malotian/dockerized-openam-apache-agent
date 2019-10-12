@@ -1,0 +1,39 @@
+version: '3.5'
+
+services:
+    openam:
+        image: malotian/forgerock/am:1.0
+        ports:
+        - "8080:8080"
+        restart: always
+        container_name: openam
+        environment:
+            AM_ADMIN_PWD: test@123
+            AM_DEMO_PWD: test@123
+            AM_HOST_NAME: openam.example.com
+            AM_COOKIE_DOMAIN: example.com
+        networks:
+            - example.com
+        hostname: openam
+        domainname: example.com
+
+    agent:
+        container_name: agent
+        build:
+            context: agent
+        shm_size: '1gb'
+        container_name: agent
+        image: malotian/agent:1.0
+        ports:
+        - "8081:80"
+        restart: always
+        networks:
+            - example.com
+        hostname: agent
+        domainname: example.com
+
+networks:
+    example.com:
+       driver: bridge
+       name: example.com
+

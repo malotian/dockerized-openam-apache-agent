@@ -1,0 +1,39 @@
+version: '3.5'
+
+services:
+    openam:
+        image: gcr.io/forgerock-io/am:7.0.0-M1
+        ports:
+        - "8080:8080"
+        restart: always
+        container_name: openam
+        environment:
+            AM_ADMIN_PWD: Infosys@123
+            AM_DEMO_PWD: Infosys@123
+            AM_HOST_NAME: openam.example.com
+        networks:
+            - example.com
+        extra_hosts:
+        - "agent.example.com:192.168.0.31"
+        - "openam.example.com:127.0.0.1"
+
+    agent:
+        container_name: agent
+        build:
+            context: agent
+        shm_size: '1gb'
+        container_name: agent
+        image: malotian/agent:1.0
+        ports:
+        - "80:80"
+        restart: always
+        networks:
+            - example.com
+        extra_hosts:
+        - "openam.example.com:192.168.0.31"
+        - "agent.example.com:127.0.0.1"
+
+networks:
+    example.com:
+       driver: bridge
+       name: example.com
